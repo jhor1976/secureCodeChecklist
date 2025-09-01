@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Checklist Seguridad - No exponer información sensible</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 8px; overflow-x: auto; }
+    h2 { color: #2c3e50; }
+  </style>
+</head>
+<body>
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+  <h2>No exponer información sensible en respuestas</h2>
+  
+  <p>
+    Las respuestas de la aplicación no deben incluir información confidencial 
+    como contraseñas, tokens, IP internas, usuarios internos o rutas del sistema.
+
+    Al construir APIs o aplicaciones web, es común que por error se filtren datos sensibles en las respuestas al cliente o en mensajes de error.
+Esto abre la puerta a ataques como:
+<ul>
+    <li>Reconocimiento y enumeración de servicios internos.</li>
+
+    <li>Exposición de secretos (contraseñas, tokens de sesión, llaves API).</li>
+
+    <li>Ataques dirigidos con IPs o rutas internas.</li>
+</ul>
+  </p>
+
+  <h3>Buenas prácticas</h3>
+  <ul>
+    <li>Nunca incluir contraseñas, tokens, secretos, IPs internas o rutas de archivos en respuestas HTTP.</li>
+    <li>Usar DTOs para controlar qué datos se exponen.</li>
+    <li>Enmascarar información cuando sea necesario (ej: tarjetas de crédito).</li>
+    <li>Configurar mensajes de error genéricos para el cliente.</li>
+    <li>Registrar detalles técnicos solo en logs internos.</li>
+    <li>Usar logs internos seguros para depuración, no la respuesta al usuario.</li>
+  </ul>
+
+  <h3>Ejemplos de información sensible que NO debe exponerse</h3>
+  <ul>
+    <li>password, secrets</li>
+    <li>access_token, refresh_token</li>
+    <li>userId interno o secuencial</li>
+    <li>Rutas internas (/opt/app/config/db.properties)</li>
+    <li>Stack traces completos</li>
+    <li>Direcciones IP internas o de contenedores</li>
+  </ul>
+
+  <h3>Alternativas</h3>
+  <ul>
+    <li>Respuestas genéricas al cliente ("Error al procesar la solicitud") y detalles solo en logs.</li>
+    <li>Enmascarar datos (ejemplo: mostrar solo últimos 4 dígitos de un número de tarjeta).</li>
+    <li>Usar DTOs (Data Transfer Objects) para controlar exactamente qué campos salen en la API.</li>
+  </ul>
+
+  <h3>Ejemplo en Spring Boot (Malo)</h3>
+  <pre><code>
+@GetMapping("/user/{id}")
+public ResponseEntity<User> getUser(@PathVariable Long id) {
+    User user = userRepository.findById(id).orElseThrow();
+    return ResponseEntity.ok(user); // Expone password y tokens
+}
+  </code></pre>
+
+  <h3>Ejemplo en Spring Boot (Bueno)</h3>
+  <pre><code>
+public record UserDTO(Long id, String name, String email) { }
+
+@GetMapping("/user/{id}")
+public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+    User user = userRepository.findById(id).orElseThrow();
+    UserDTO dto = new UserDTO(user.getId(), user.getName(), user.getEmail());
+    return ResponseEntity.ok(dto);
+}
+  </code></pre>
+</body>
+</html>

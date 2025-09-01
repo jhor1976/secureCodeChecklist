@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validaciones en el Servidor - Ejemplo WebFlux</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+  <div class="container mx-auto px-4 py-8">
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+
+    <h1 class="text-2xl font-bold mt-4 mb-6 text-indigo-700">
+      ✅ Validaciones en el Servidor (OWASP Top 10 - A01)
+    </h1>
+
+    <p class="mb-4">
+      Todas las validaciones deben realizarse en el servidor, incluso si ya existen en el cliente.
+      Esto evita que un atacante omita la validación manipulando el frontend o la petición.
+    </p>
+
+    <h2 class="text-xl font-semibold mb-2">Ejemplo en Java + Spring WebFlux</h2>
+
+    <div class="bg-gray-900 text-green-200 p-4 rounded-lg shadow-md overflow-x-auto">
+      <pre><code>
+// Controlador Reactivo con validación
+@PostMapping("/api/usuarios")
+public Mono<ResponseEntity<String>> crearUsuario(@Valid @RequestBody UsuarioRequest request) {
+    return userService.crearUsuario(request)
+        .map(usuario -> ResponseEntity.ok("Usuario creado con ID: " + usuario.getId()))
+        .onErrorResume(MethodArgumentNotValidException.class, e -> {
+            return Mono.just(ResponseEntity.badRequest()
+                .body("Error de validación: " + e.getMessage()));
+        });
+}
+
+// DTO con validaciones
+public class UsuarioRequest {
+    @NotBlank(message = "El nombre es obligatorio")
+    private String nombre;
+
+    @Email(message = "El correo no es válido")
+    private String email;
+
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+    private String password;
+
+    // getters y setters
+}
+      </code></pre>
+    </div>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Buenas prácticas</h2>
+    <ul class="list-disc list-inside space-y-1">
+      <li>Usar <code>@Valid</code> y <code>javax.validation</code> para validar DTOs.</li>
+      <li>No confiar nunca en la validación del cliente.</li>
+      <li>Centralizar validaciones comunes (ej: emails, contraseñas).</li>
+      <li>Registrar los errores para auditoría y monitoreo.</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Referencias</h2>
+    <ul class="list-disc list-inside space-y-1">
+      <li><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank" class="text-indigo-600 hover:underline">OWASP Top 10 - Broken Access Control</a></li>
+      <li><a href="https://spring.io/guides/gs/validating-form-input/" target="_blank" class="text-indigo-600 hover:underline">Spring - Validating Form Input</a></li>
+    </ul>
+  </div>
+</body>
+</html>

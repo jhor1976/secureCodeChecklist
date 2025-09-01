@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Rechazo de entradas inválidas - OWASP Checklist</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    h1 { color: #2c3e50; }
+    pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    .good { color: green; }
+    .bad { color: red; }
+  </style>
+</head>
+<body>
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+  <h1>Todas las fallas en la validación resultan en el rechazo del dato</h1>
+
+  <h2>Explicación</h2>
+  <p>
+    Si un dato no pasa la validación, debe ser <strong>rechazado inmediatamente</strong>. 
+    Permitir que un input inválido siga en el flujo es un riesgo de seguridad.
+
+    La validación de datos no sirve de nada si, al fallar, el sistema sigue procesando el dato.
+    El principio <b>Fail Fast</b>: ante cualquier fallo en la validación, el dato debe ser rechazado inmediatamente.
+
+❌ Mal: Validar, registrar un warning, pero aún así procesar el dato.
+
+✅ Bien: Detener el flujo, retornar un error claro y evitar que el dato contaminado llegue a la lógica del negocio o la base de datos.
+
+Esto mitiga:
+
+<ul>
+    <li>Inyecciones (SQL, NoSQL, LDAP, etc.).</li>
+
+    <li>Procesamiento inconsistente de datos inválidos.</li>
+
+    <li>Errores lógicos que el atacante puede aprovechar.</li>
+</ul>
+  </p>
+
+  <h2>Buenas prácticas</h2>
+  <ul>
+    <li>Usar listas blancas (<em>qué está permitido</em>).</li>
+    <li>Rechazar datos inválidos con código HTTP <code>400 Bad Request</code>.</li>
+    <li>No intentar corregir o “parchear” automáticamente la entrada.</li>
+    <li>Registrar el fallo, sin exponer detalles sensibles al cliente.</li>
+  </ul>
+
+  <h2>Ejemplo en Java + WebFlux</h2>
+  <pre><code>
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Mono;
+
+import java.util.regex.Pattern;
+
+@RestController
+@RequestMapping("/validacion")
+public class ValidacionController {
+
+    private static final Pattern ALLOWED_PATTERN = Pattern.compile("^[a-zA-Z0-9_]+$");
+
+    @PostMapping("/procesar")
+    public Mono&lt;String&gt; procesarEntrada(@RequestBody Mono&lt;String&gt; entradaMono) {
+        return entradaMono.flatMap(entrada -> {
+            if (ALLOWED_PATTERN.matcher(entrada).matches()) {
+                return Mono.just("✅ Procesado correctamente: " + entrada);
+            } else {
+                return Mono.error(new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "Entrada inválida detectada"
+                ));
+            }
+        });
+    }
+}
+  </code></pre>
+</body>
+</html>

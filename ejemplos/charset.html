@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>OWASP Checklist - Charset</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    h1 { color: #2c3e50; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 6px; }
+    .good-practices { background: #eafaf1; padding: 10px; border-left: 5px solid #27ae60; }
+  </style>
+</head>
+<body>
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+  <h1>Validación de Charset en entradas de datos</h1>
+  <p><strong>Item:</strong> ¿Se especifica el juego de caracteres apropiado (por ejemplo, UTF-8) para todas las entradas de datos?</p>
+
+  <h2>Explicación</h2>
+  <p>El uso inconsistente de codificaciones de caracteres puede abrir la puerta a vulnerabilidades de inyección y 
+  bypass de validaciones. OWASP recomienda utilizar siempre <strong>UTF-8</strong> como estándar, y validar que 
+  todas las entradas de datos sean interpretadas correctamente en este formato.</p>
+
+  <div class="good-practices">
+    <h3>Buenas prácticas:</h3>
+    <ul>
+      <li>Forzar UTF-8 en todas las entradas y salidas de datos.</li>
+      <li>No confiar en el charset enviado por el cliente, imponlo desde el servidor.</li>
+      <li>Definir explícitamente el charset en configuraciones de Spring Boot y cabeceras HTTP.</li>
+      <li>Verificar logs y auditorías de datos con codificación uniforme.</li>
+    </ul>
+  </div>
+
+  <h2>Ejemplo en Java con Spring WebFlux</h2>
+  <pre><code>
+package com.example.security.filter;
+
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
+
+import java.nio.charset.StandardCharsets;
+
+@Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class CharsetValidationFilter implements WebFilter {
+
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        ServerHttpRequest request = exchange.getRequest();
+
+        String contentType = request.getHeaders().getFirst("Content-Type");
+        if (contentType != null && !contentType.toLowerCase().contains("charset=utf-8")) {
+            return Mono.error(new IllegalArgumentException("Se requiere charset=UTF-8 en las entradas de datos."));
+        }
+
+        exchange.getAttributes().put("validatedCharset", StandardCharsets.UTF_8);
+
+        return chain.filter(exchange);
+    }
+}
+  </code></pre>
+</body>
+</html>

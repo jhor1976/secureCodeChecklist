@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Codificación en zona de confianza - OWASP Checklist</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    h1 { color: #2c3e50; }
+    pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    .good { color: green; font-weight: bold; }
+    .bad { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+  <h1>Realizar toda codificación en una zona de confianza (servidor)</h1>
+
+  <h2>Explicación</h2>
+  <p>
+    Este punto se refiere a que la codificación (encoding/escapado) de los datos de entrada y salida debe hacerse en un entorno controlado y seguro —generalmente el servidor— y no delegar esta tarea a componentes no confiables (como el navegador o el cliente).
+
+    <ul>
+    <li>El cliente (navegador, app móvil) no debe ser responsable de aplicar la codificación, porque puede ser manipulado.</li>
+    <li>El servidor garantiza que la data se entregue ya codificada en el contexto apropiado: HTML, JavaScript, SQL, XML, JSON, etc.</li>
+</ul>
+  </p>
+
+  <h2>Riesgos de no hacerlo</h2>
+  <p>
+    <ul>
+    <li>Cross-Site Scripting (XSS): Si confías en que el navegador escape caracteres, un atacante puede inyectar script malicioso.</li>
+    <li>Inyección SQL / LDAP / XML: Si no se codifica en la capa del servidor antes de enviar la consulta.</li>
+    <li>Exfiltración de datos sensibles: Cuando el cliente recibe datos sin procesar y puede manipularlos.</li>
+</ul>
+  </p>
+
+  <h2>Buenas prácticas</h2>
+  <ul>
+    <li>Aplicar <em>contextual output encoding</em> según HTML, JSON, XML, SQL, etc.</li>
+    <li>Usar librerías seguras (ej: OWASP Encoder para Java).</li>
+    <li>Mantener la lógica de codificación en el backend, nunca en el cliente.</li>
+    <li>Separar claramente: Validación ≠ Codificación (validación filtra lo permitido de lo que entra, codificación transforma lo permitido en seguro).</li>
+    <li>No delegar el escapado al navegador.</li>
+    <li>Validar y codificar datos antes de renderizarlos o persistirlos.</li>
+  </ul>
+
+  
+</body>
+</html>

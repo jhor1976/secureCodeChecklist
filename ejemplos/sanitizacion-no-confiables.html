@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Checklist Seguridad - Sanitización según contexto</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 8px; overflow-x: auto; }
+    h2 { color: #2c3e50; }
+  </style>
+</head>
+<body>
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+  <h2>Sanitice según el contexto todas las salidas de datos no confiables hacia consultas SQL, XML y LDAP</h2>
+  
+  <p>
+    Este control busca garantizar que los datos no confiables sean correctamente sanitizados 
+    antes de ser usados en <strong>consultas SQL, XML o LDAP</strong>, previniendo inyecciones y 
+    vulnerabilidades de seguridad.
+    Las entradas no confiables (usuario, archivos, servicios externos) no deben concatenarse directamente en consultas SQL, XML o LDAP.
+  </p>
+  
+  <h3>Buenas prácticas</h3>
+  <ul>
+    <li>Use consultas parametrizadas para SQL.</li>
+    <li>Escape caracteres especiales en XML.</li>
+    <li>Escape caracteres especiales en LDAP.</li>
+    <li>Nunca construya consultas dinámicas concatenando cadenas.</li>
+  </ul>
+  
+  <h3>Ejemplo en Java (Spring WebFlux)</h3>
+  <pre><code>
+// Servicio que aplica sanitización según contexto
+@Service
+public class DataSanitizationService {
+
+    private final DatabaseClient databaseClient;
+
+    public DataSanitizationService(DatabaseClient databaseClient) {
+        this.databaseClient = databaseClient;
+    }
+
+    // SQL seguro con parámetros
+    public Mono<User> findUserByEmail(String email) {
+        return databaseClient.sql("SELECT * FROM users WHERE email = :email")
+                .bind("email", email)
+                .map((row, metadata) -> new User(
+                        row.get("id", Long.class),
+                        row.get("email", String.class)))
+                .one();
+    }
+
+    // XML seguro
+    public String safeXml(String input) {
+        return StringEscapeUtils.escapeXml11(input);
+    }
+
+    // LDAP seguro
+    public String safeLdap(String input) {
+        return input.replaceAll("([\\\\*()\\0])", "\\\\$1");
+    }
+}
+  </code></pre>
+</body>
+</html>

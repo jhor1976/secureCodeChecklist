@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Canonización de Datos - OWASP Checklist</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    h1 { color: #2c3e50; }
+    pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    .good { color: green; }
+    .bad { color: red; }
+  </style>
+</head>
+<body>
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+  <h1>Canonización de datos antes de validación</h1>
+
+  <h2>Explicación</h2>
+  <p>
+    La canonización consiste en transformar los datos a un formato de caracteres común 
+    (<strong>UTF-8 normalizado</strong>) antes de validarlos. Esto evita que entradas maliciosas 
+    usen representaciones alternativas para evadir filtros. (ejemplo: %2E%2E%2F que equivale a ../ en rutas, o caracteres Unicode engañosos).
+
+    Sin canonización: un atacante puede usar codificaciones alternativas para evadir filtros.
+    
+    Con canonización: el sistema convierte todo a un formato base (ejemplo: UTF-8 normalizado), asegurando que las validaciones sean efectivas.
+  </p>
+
+  <h2>Buenas prácticas</h2>
+  <ul>
+    <li>Usar librerías estándar para normalizar (Java <code>Normalizer</code>).</li>
+    <li>Canonizar <em>antes</em> de aplicar validaciones.</li>
+    <li>Eliminar caracteres invisibles o espacios extra.</li>
+    <li>Definir expresiones regulares claras para datos permitidos.</li>
+  </ul>
+
+  <h2>Ejemplo en Java + WebFlux</h2>
+  <pre><code>
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
+@RestController
+@RequestMapping("/canonizacion")
+public class CanonizacionController {
+
+    private static final Pattern ALLOWED_PATTERN = Pattern.compile("^[a-zA-Z0-9_]+$");
+
+    @PostMapping("/validar")
+    public Mono<String> validarEntrada(@RequestBody Mono<String> entradaMono) {
+        return entradaMono.map(this::canonizar).flatMap(entradaCanonizada -> {
+            if (ALLOWED_PATTERN.matcher(entradaCanonizada).matches()) {
+                return Mono.just("✅ Entrada válida: " + entradaCanonizada);
+            } else {
+                return Mono.just("❌ Entrada inválida detectada");
+            }
+        });
+    }
+
+    private String canonizar(String input) {
+        // Normalizar a forma canónica (NFKC = compatibilidad + composición)
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFKC);
+        // Eliminar espacios extra y caracteres invisibles
+        return normalized.trim();
+    }
+}
+  </code></pre>
+</body>
+</html>

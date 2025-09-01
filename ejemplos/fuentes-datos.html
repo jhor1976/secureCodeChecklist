@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Identificar y validar fuentes de datos</title>
+  <style>
+    :root{--card:#ffffff;--accent:#06b6d4;--muted:#94a3b8;--yes:#10b981;--no:#ef4444}
+    body{font-family:Inter,ui-sans-serif,system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(180deg,#ffffff 0%, #ffffff 100%); color:#e6eef8; margin:0; padding:32px}
+    .container{max-width:1000px;margin:0 auto}
+    header{display:flex;align-items:center;gap:16px}
+    h1{margin:0;font-size:22px}
+    p.lead{color:var(--muted); margin:8px 0 24px}
+    .card{background:var(--card); padding:20px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,.6); margin-bottom:20px}
+    h2{margin:0 0 8px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    pre{background:#021025;padding:12px;border-radius:8px;overflow:auto;color:#d0f0fb}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,.04);text-align:left}
+    .muted{color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:8px;align-items:center}
+    .btn{background:var(--accent);color:#051025;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+    .small{font-size:13px;color:var(--muted)}
+    .result{margin-top:12px;padding:10px;border-radius:8px;background:linear-gradient(90deg,rgba(6,182,212,0.06),rgba(16,185,129,0.04));color:#bff0f7}
+    @media (max-width:760px){.grid{grid-template-columns:1fr}}
+    </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+  <div class="container mx-auto px-4 py-8">
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+
+    <h1 class="text-2xl font-bold mt-4 mb-6 text-indigo-700">
+      ✅ Identificar y validar fuentes de datos 
+    </h1>
+
+    <section class="card">
+        <h2>Resumen y objetivo</h2>
+        <p class="lead">Esta página contiene: (1) descripción de qué significa clasificar fuentes de datos como confiables o no, (2) criterios para clasificarlas, (3) recomendaciones de validación (4) y buenas practicas.</p>
+      </section>
+  
+      <section class="card grid">
+        <div>
+          <h2>¿Qué significa?</h2>
+          <p class="muted"><strong>Fuente confiable:</strong> controlada por tu organización y con garantías de integridad y formato (ej.: microservicio interno autenticado, base de datos propia).<br>
+          <strong>Fuente no confiable:</strong> cualquier entrada que pueda ser manipulada por terceros o no esté 100% bajo tu control (ej.: formularios, archivos subidos, APIs externas).</p>
+  
+          <h3>Regla práctica</h3>
+          <p class="muted">Si no lo controlas al 100%: trátalo como <strong>no confiable</strong> y aplica validaciones.</p>
+        </div>
+  
+        <div>
+          <h2>Cómo clasificar fuentes (rápido)</h2>
+          <ul class="muted">
+            <li><strong>Entradas directas de usuario:</strong> formularios, parámetros URL, cabeceras — <em>Siempre NO confiables</em>.</li>
+            <li><strong>Archivos cargados y dispositivos:</strong> CSV, imágenes, IoT — <em>NO confiables</em>.</li>
+            <li><strong>Fuentes internas controladas:</strong> DB propia, caches, colas internas — <em>Confiables si el origen está controlado</em>.</li>
+            <li><strong>Servicios autenticados internos:</strong> microservicios internos con mTLS/JWT — <em>Confiables</em>, pero validar esquema/contrato.</li>
+            <li><strong>Servicios de terceros:</strong> REST/SOAP externos — <em>NO confiables</em>.</li>
+          </ul>
+        </div>
+      </section>
+  
+      <section class="card">
+        <h2>Cómo validar datos de fuentes no confiables</h2>
+        <ol class="muted">
+          <li><strong>Validación sintáctica:</strong> tipo, longitud, formato (regex), juego de caracteres (UTF-8).</li>
+          <li><strong>Validación semántica:</strong> reglas de dominio (ej.: edad ≥ 18, montos > 0, fechas coherentes).</li>
+          <li><strong>Validación de seguridad:</strong> proteger contra inyección, XSS, path traversal, bytes nulos, doble codificación.</li>
+          <li><strong>Listas permitidas (whitelists):</strong> preferir whitelist sobre blacklist.</li>
+          <li><strong>Canonicalización:</strong> normalizar antes de validar para evitar doble codificación y ofuscación.</li>
+          <li><strong>Centralización:</strong> reunir reglas en una librería o servicio común (evita duplicidad y errores).</li>
+          <li><strong>Logging y alertas:</strong> registrar rechazos, patrones anómalos y origen de los datos.</li>
+        </ol>
+      </section>
+
+    
+      <section class="card">
+    <h2 class="text-xl font-semibold mt-6 mb-2">Buenas prácticas</h2>
+    <ul class="muted">
+        <li>Centraliza validaciones en una librería o middleware (filtros/interceptors) para asegurar consistencia.</li>
+        <li>Registra los rechazos con suficiente contexto para investigar sin exponer datos sensibles.</li>
+        <li>Define quién es responsable de mantener las listas permitidas y las reglas de validación (propiedad del equipo/producto).</li>
+        <li>Incluye estas pruebas en tu pipeline de CI/CD y crea tests automatizados que cubran inputs válidos e inválidos.</li>
+      </ul>
+</section>
+
+    <h2 class="text-xl font-semibold mt-6 mb-2">Referencias</h2>
+    <ul class="list-disc list-inside space-y-1">
+      <li><a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/" target="_blank" class="text-indigo-600 hover:underline">OWASP Top 10 - Broken Access Control</a></li>
+      <li><a href="https://spring.io/guides/gs/validating-form-input/" target="_blank" class="text-indigo-600 hover:underline">Spring - Validating Form Input</a></li>
+    </ul>
+  </div>
+</body>
+</html>
+
+
+

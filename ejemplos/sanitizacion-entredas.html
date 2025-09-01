@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Checklist Seguridad - Sanitización de entradas</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 8px; overflow-x: auto; }
+    h2 { color: #2c3e50; }
+  </style>
+</head>
+<body>
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+  <h2>Sanitizar todas las entradas en backend y frontend cuando aplique</h2>
+  
+  <p>
+    La sanitización de entradas es el proceso de limpiar datos provenientes de fuentes externas (usuarios, archivos, servicios externos, cabeceras HTTP, etc.) antes de procesarlos o almacenarlos.
+    Se busca neutralizar contenido malicioso o inesperado, como:
+
+    <ul>
+        <li>Inyección SQL</li>
+
+        <li>XSS (Cross-Site Scripting)</li>
+
+        <li>Command Injection</li>
+
+        <li>XML/JSON Injection</li>
+    </ul>
+    👉 La regla general es nunca confiar en el input del usuario (ni siquiera si viene del frontend propio).
+    
+  </p>
+
+  <h3>Buenas prácticas</h3>
+  <ul>
+    <li>Validar tipo, rango y formato de datos.</li>
+    <li>Usar whitelists en lugar de blacklists.</li>
+    <li>Escapar contenido dinámico en HTML/JavaScript.</li>
+    <li>Evitar concatenar datos directamente en SQL o comandos.</li>
+    <li>Aplicar sanitización en <strong>frontend y backend</strong>, nunca confiar en uno solo.</li>
+    <li>Nunca confiar en que la validación del frontend reemplaza la del backend (se complementan).</li>
+  </ul>
+
+  <h3>Ejemplo en Java (Backend)</h3>
+  <pre><code>
+@Service
+public class InputSanitizerService {
+
+    public String sanitizeHtmlInput(String input) {
+        return Encode.forHtml(input);
+    }
+
+    public String validateName(String name) {
+        if (!name.matches("^[a-zA-Z ]+$")) {
+            throw new IllegalArgumentException("Nombre inválido");
+        }
+        return name;
+    }
+}
+  </code></pre>
+
+  
+</body>
+</html>

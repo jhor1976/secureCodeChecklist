@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Checklist Seguridad - Sanitización de comandos SO</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 8px; overflow-x: auto; }
+    h2 { color: #2c3e50; }
+  </style>
+</head>
+<body>
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+  <h2>Sanitice todas las salidas de datos no confiables hacia comandos del sistema operativo</h2>
+  
+  <p>
+    Este control busca evitar vulnerabilidades de <strong>Command Injection</strong>, 
+    que ocurren cuando datos de entrada no confiables son enviados directamente a comandos del sistema operativo.
+  </p>
+  
+  <h3>Buenas prácticas</h3>
+  <ul>
+    <li>Evite <code>Runtime.exec()</code> o <code>ProcessBuilder</code> con cadenas concatenadas.</li>
+    <li>Prefiera usar las APIs de Java en lugar de comandos del sistema operativo (ej: Files.copy() en lugar de cp).</li>
+    <li>Si debe usarlos, separe los argumentos en listas y use validación tipo whitelist.</li>
+    <li>Nunca ejecute directamente datos de usuario.</li>
+  </ul>
+  
+  <h3>Ejemplo en Java</h3>
+  <pre><code>
+// Servicio que ejecuta comandos del sistema de forma segura
+@Service
+public class SafeCommandService {
+
+    // Inseguro ❌
+    public void runCommandInsecure(String input) throws IOException {
+        Runtime.getRuntime().exec("ls " + input);
+    }
+
+    // Seguro ✅
+    public void runCommandSafe(String directory) throws IOException {
+        if (!directory.matches("[a-zA-Z0-9_-]+")) {
+            throw new IllegalArgumentException("Directorio inválido");
+        }
+
+        ProcessBuilder pb = new ProcessBuilder("ls", directory);
+        pb.redirectErrorStream(true);
+        Process process = pb.start();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        }
+    }
+}
+  </code></pre>
+</body>
+</html>

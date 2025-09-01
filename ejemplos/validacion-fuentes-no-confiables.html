@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Checklist OWASP - Validación de datos no confiables</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    pre {
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      padding: 10px;
+      overflow-x: auto;
+    }
+    code {
+      font-family: Consolas, monospace;
+      font-size: 14px;
+    }
+    .good-practices {
+      background: #e8f8f5;
+      border-left: 5px solid #1abc9c;
+      padding: 10px;
+      margin: 15px 0;
+    }
+    a {
+      color: #2980b9;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+  <h1>Checklist OWASP</h1>
+  <h2>Validación de datos no confiables</h2>
+
+  <p>
+    <strong>Item:</strong> Se validaron los datos provenientes de fuentes no confiables 
+    (por ejemplo: bases de datos, archivos, servicios externos REST/SOAP).
+  </p>
+
+  <h3>Explicación</h3>
+  <p>
+    En seguridad, cualquier fuente de datos externa o indirecta debe considerarse <em>no confiable</em>. 
+    Esto incluye entradas de bases de datos externas, archivos subidos por usuarios, 
+    o respuestas de servicios de terceros (REST, SOAP, etc.).  
+    Validar estos datos es fundamental para evitar ataques de inyección, 
+    corrupción de datos, errores de formato o ejecución de código malicioso.
+  </p>
+
+  <div class="good-practices">
+    <h3>Buenas prácticas</h3>
+    <ul>
+      <li>Clasificar todas las fuentes de datos en confiables y no confiables.</li>
+      <li>Aplicar validaciones estrictas en datos externos antes de usarlos.</li>
+      <li>Verificar longitud, formato y contenido permitido.</li>
+      <li>Evitar confiar ciegamente en servicios de terceros.</li>
+      <li>Aplicar sanitización contra inyección de código (SQL, XML, JSON, etc.).</li>
+      <li>Rechazar cualquier dato que no cumpla las reglas definidas.</li>
+    </ul>
+  </div>
+
+  <h3>Ejemplo en Java + WebFlux</h3>
+  <p>
+    Este ejemplo simula la llamada a un servicio REST externo. 
+    Antes de devolver el dato, se valida para garantizar que no sea nulo, vacío, 
+    demasiado largo o que contenga caracteres peligrosos.
+  </p>
+
+  <h4>📂 ClienteExternoService.java</h4>
+  <pre><code>
+package com.ejemplo.seguridad.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+@Service
+public class ClienteExternoService {
+
+    private final WebClient webClient;
+
+    public ClienteExternoService(WebClient.Builder builder) {
+        this.webClient = builder.baseUrl("https://api.tercero.com").build();
+    }
+
+    public Mono&lt;String&gt; obtenerDatoExterno() {
+        return webClient.get()
+                .uri("/dato")
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(this::validarDato);
+    }
+
+    private String validarDato(String dato) {
+        if (dato == null || dato.isBlank()) {
+            throw new IllegalArgumentException("Dato externo no válido");
+        }
+        if (dato.length() &gt; 100) {
+            throw new IllegalArgumentException("Dato demasiado grande");
+        }
+        if (!dato.matches("^[a-zA-Z0-9 _-]+$")) {
+            throw new IllegalArgumentException("Formato de dato no permitido");
+        }
+        return dato;
+    }
+}
+  </code></pre>
+
+  <h4>📂 ClienteController.java</h4>
+  <pre><code>
+package com.ejemplo.seguridad.controller;
+
+import com.ejemplo.seguridad.service.ClienteExternoService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+@RestController
+public class ClienteController {
+
+    private final ClienteExternoService clienteExternoService;
+
+    public ClienteController(ClienteExternoService clienteExternoService) {
+        this.clienteExternoService = clienteExternoService;
+    }
+
+    @GetMapping("/cliente/externo")
+    public Mono&lt;String&gt; obtenerCliente() {
+        return clienteExternoService.obtenerDatoExterno();
+    }
+}
+  </code></pre>
+
+ 
+</body>
+</html>

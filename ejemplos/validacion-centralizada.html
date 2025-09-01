@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Checklist OWASP - Validación centralizada de datos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    pre {
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      padding: 10px;
+      overflow-x: auto;
+    }
+    code {
+      font-family: Consolas, monospace;
+      font-size: 14px;
+    }
+    .good-practices {
+      background: #e8f8f5;
+      border-left: 5px solid #1abc9c;
+      padding: 10px;
+      margin: 15px 0;
+    }
+    a {
+      color: #2980b9;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+    <a href="../index.html" class="text-indigo-600 hover:underline">⬅ Volver al checklist</a>
+  <h1>Checklist OWASP</h1>
+  <h2>Rutina centralizada de validación de datos</h2>
+
+  <p>
+    <strong>Item:</strong> ¿Se creó una rutina centralizada de validación de datos de entrada o se usó una existente?
+  </p>
+
+  <h3>Explicación</h3>
+  <p>
+    La validación de datos de entrada es uno de los puntos más críticos en seguridad.  
+    Cuando cada desarrollador implementa sus propias validaciones, es fácil que se introduzcan 
+    inconsistencias, omisiones o errores.  
+  </p>
+  <p>
+    Una <em>rutina centralizada de validación</em> (librería interna, clase utilitaria o 
+    integración con un framework) permite que todos los equipos usen las mismas reglas de seguridad, 
+    reduciendo riesgos de inyección, datos corruptos o vulnerabilidades repetidas.
+  </p>
+
+  <div class="good-practices">
+    <h3>Buenas prácticas</h3>
+    <ul>
+      <li>Implementar una librería interna de validación reutilizable.</li>
+      <li>Usar frameworks probados como <code>Jakarta Validation (Bean Validation)</code> con anotaciones (<code>@NotNull</code>, <code>@Size</code>, <code>@Pattern</code>, etc.).</li>
+      <li>Centralizar las reglas de negocio críticas en un servicio de validación común.</li>
+      <li>Aplicar validación tanto en el borde de la aplicación (controladores) como en servicios internos.</li>
+      <li>Rechazar cualquier dato que no cumpla las validaciones desde el inicio.</li>
+    </ul>
+  </div>
+
+  <h3>Ejemplo en Java + WebFlux</h3>
+  <p>
+    En este ejemplo se crea una clase <code>ValidadorCentralizado</code> que concentra las reglas de validación, 
+    y se reutiliza en los controladores y servicios.
+  </p>
+
+  <h4>📂 ValidadorCentralizado.java</h4>
+  <pre><code>
+package com.ejemplo.seguridad.validacion;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class ValidadorCentralizado {
+
+    public void validarNombre(String nombre) {
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+        }
+        if (nombre.length() &gt; 50) {
+            throw new IllegalArgumentException("El nombre es demasiado largo");
+        }
+        if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")) {
+            throw new IllegalArgumentException("El nombre contiene caracteres inválidos");
+        }
+    }
+
+    public void validarEdad(Integer edad) {
+        if (edad == null || edad &lt; 0 || edad &gt; 120) {
+            throw new IllegalArgumentException("Edad no válida");
+        }
+    }
+}
+  </code></pre>
+
+  <h4>📂 UsuarioController.java</h4>
+  <pre><code>
+package com.ejemplo.seguridad.controller;
+
+import com.ejemplo.seguridad.validacion.ValidadorCentralizado;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+
+@RestController
+@RequestMapping("/usuario")
+public class UsuarioController {
+
+    private final ValidadorCentralizado validador;
+
+    public UsuarioController(ValidadorCentralizado validador) {
+        this.validador = validador;
+    }
+
+    @PostMapping("/crear")
+    public Mono&lt;String&gt; crearUsuario(@RequestParam String nombre, 
+                                     @RequestParam Integer edad) {
+        validador.validarNombre(nombre);
+        validador.validarEdad(edad);
+
+        return Mono.just("Usuario válido: " + nombre + ", edad " + edad);
+    }
+}
+  </code></pre>
+
+  <br>
+  <a href="index.html">⬅ Volver al listado</a>
+</body>
+</html>
