@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist Seguridad - OWASP & MITRE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-center text-indigo-700">
+      📌 Checklist de Seguridad - OWASP Top 10 & MITRE
+    </h1>
+
+    <div class="bg-white shadow-lg rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-4">Validación de entradas</h2>
+      <ul class="list-disc list-inside space-y-2">
+        <li>
+          <a href="ejemplos/validaciones-servidor.html" class="text-indigo-600 hover:underline">
+            1️⃣ Todas las validaciones de datos de entrada se están haciendo en el servidor?
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/fuentes-datos.html" class="text-indigo-600 hover:underline">
+            2️⃣ Se identificaron todas las fuentes de datos y se clasificaron como confiables o no confiables?
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/validacion-fuentes-no-confiables.html" class="text-indigo-600 hover:underline">
+            3️⃣ Se validaron los datos provenientes de fuentes no confiables (por ejemplo, bases de datos, archivos, servicios de terceros REST/SOAP )?
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/validacion-centralizada.html" class="text-indigo-600 hover:underline">
+            4️⃣ Se creo una rutina centralizada de validación de datos de entrada o se uso una existente?
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/charset.html" class="text-indigo-600 hover:underline">
+            5️⃣ Se especifica el juego de caracteres apropiado (por ejemplo, UTF-8) para todas las entradas de datos?
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/canonizacion.html" class="text-indigo-600 hover:underline">
+            6️⃣ Se canonizan los datos—es decir, se convierten a un juego de caracteres común—antes de validarlos?
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/rechazo-entradas-invalidas.html" class="text-indigo-600 hover:underline">
+            7️⃣ Todas las fallas en la validación resultaron en el rechazo del dato de entrada?
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/sanitizacion-entredas.html" class="text-indigo-600 hover:underline">
+            8️⃣ Se sanitizan (limpian/depuran) todas las entradas en backend y frontend cuando aplica?
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/logging.html" class="text-indigo-600 hover:underline">
+            9️⃣ Registro y monitoreo seguro
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/recursos.html" class="text-indigo-600 hover:underline">
+            🔟 Limitación de recursos y control de accesos
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="bg-white shadow-lg rounded-lg p-6 mt-8">
+        <h2 class="text-xl font-semibold mb-4">Codificación de salidas</h2>
+        <ul class="list-disc list-inside space-y-2">
+          <li>
+            <a href="ejemplos/codificacion-confianza.html" class="text-indigo-600 hover:underline">
+                Se realiza toda codificación en el servidor?
+            </a>
+          </li>
+          <li>
+            <a href="ejemplos/sanitizacion-no-confiables.html" class="text-indigo-600 hover:underline">
+                Se sanitizan según el contexto todas las salidas de datos no confiables hacia consultas SQL, XML y LDAP?
+            </a>
+          </li>
+          <li>
+            <a href="ejemplos/sanitizacion-comandos.html" class="text-indigo-600 hover:underline">
+                Se sanitizan todas las salidas de datos no confiables hacia comandos del sistema operativo?
+            </a>
+          </li>
+          <li>
+            <a href="ejemplos/cwe-200.html" class="text-indigo-600 hover:underline">
+              CWE-200: Exposure of Sensitive Information
+            </a>
+          </li>
+          <li>
+            <a href="ejemplos/cwe-732.html" class="text-indigo-600 hover:underline">
+              CWE-732: Incorrect Permission Assignment for Critical Resource
+            </a>
+          </li>
+          <!-- Aquí puedes seguir agregando los demás -->
+        </ul>
+      </div>
+
+
+      <div class="bg-white shadow-lg rounded-lg p-6 mt-8">
+        <h2 class="text-xl font-semibold mb-4">Checklist interno</h2>
+        <ul class="list-disc list-inside space-y-2">
+          <li>
+            <a href="ejemplos/evitar-exponer-info-sensible.html" class="text-indigo-600 hover:underline">
+                Se evita exponer información sensible en las respuestas (contraseñas, tokens, IP, usuarios internos, rutas, etc.)?
+            </a>
+          </li>
+          <li>
+            <a href="ejemplos/evitar-exponer-secretos.html" class="text-indigo-600 hover:underline">
+                No incluir claves API o secretos en código fuente; usar secretos gestionados por la nube o CI/CD.
+            </a>
+          </li>
+          <li>
+            <a href="ejemplos/cwe-20.html" class="text-indigo-600 hover:underline">
+              CWE-20: Improper Input Validation
+            </a>
+          </li>
+          <li>
+            <a href="ejemplos/cwe-200.html" class="text-indigo-600 hover:underline">
+              CWE-200: Exposure of Sensitive Information
+            </a>
+          </li>
+          <li>
+            <a href="ejemplos/cwe-732.html" class="text-indigo-600 hover:underline">
+              CWE-732: Incorrect Permission Assignment for Critical Resource
+            </a>
+          </li>
+          <!-- Aquí puedes seguir agregando los demás -->
+        </ul>
+      </div>
+
+    <div class="bg-white shadow-lg rounded-lg p-6 mt-8">
+      <h2 class="text-xl font-semibold mb-4">MITRE Top 25 Most Dangerous Software Errors</h2>
+      <ul class="list-disc list-inside space-y-2">
+        <li>
+          <a href="ejemplos/cwe-89.html" class="text-indigo-600 hover:underline">
+            CWE-89: SQL Injection
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/cwe-79.html" class="text-indigo-600 hover:underline">
+            CWE-79: Cross-Site Scripting (XSS)
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/cwe-20.html" class="text-indigo-600 hover:underline">
+            CWE-20: Improper Input Validation
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/cwe-200.html" class="text-indigo-600 hover:underline">
+            CWE-200: Exposure of Sensitive Information
+          </a>
+        </li>
+        <li>
+          <a href="ejemplos/cwe-732.html" class="text-indigo-600 hover:underline">
+            CWE-732: Incorrect Permission Assignment for Critical Resource
+          </a>
+        </li>
+        <!-- Aquí puedes seguir agregando los demás -->
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
