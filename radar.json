@@ -1,0 +1,47 @@
+[
+    {
+        "name": "Spring boot y webflux",
+        "ring": "Adopt",
+        "quadrant": "languages-and-frameworks",
+        "isNew": false,
+        "Goal": "Estandarizar el desarrollo de microservicios.",
+        "Beneficio": "Amplio ecosistema, soporte de comunidad, compatibilidad con herramientas de observabilidad.",
+        "Impacto": "Alta estabilidad y productividad para los equipos de desarrollo."
+    },
+    {
+        "name": "GraphQL como alternativa a REST",
+        "ring": "Trial",
+        "quadrant": "languages-and-frameworks",
+        "isNew": true,
+        "Goal": "Optimizar la forma de exponer y consumir APIs.",
+        "Beneficio": "Consultas flexibles, reducción de over-fetching y under-fetching.",
+        "Impacto": "Mejora en la experiencia de cliente y eficiencia en consumo de datos."
+    },
+    {
+        "name": "Virtual Threads (Project Loom)",
+        "ring": "Trial",
+        "quadrant": "languages-and-frameworks",
+        "isNew": true,
+        "Goal": "Simplificar concurrencia y mejorar performance.",
+        "Beneficio": "Mejor escalabilidad en microservicios.",
+        "Impacto": "Permite soportar más usuarios concurrentes con menos recursos."
+    },
+    {
+        "name": "Micronaut o Quarkus",
+        "ring": "Assess",
+        "quadrant": "languages-and-frameworks",
+        "isNew": true,
+        "Goal": "Comparar frameworks modernos de Java frente a Spring Boot.",
+        "Beneficio": "Menor consumo de memoria, arranques más rápidos.",
+        "Impacto": "Optimización de costes en infraestructura y tiempos de despliegue."
+    },
+    {
+        "name": "Frameworks y librerias SNAPSHOT u obsoletos",
+        "ring": "Hold",
+        "quadrant": "languages-and-frameworks",
+        "isNew": true,
+        "Goal": "Eliminar riesgos en la seguridad y estabilidad.",
+        "Beneficio": "Mayor seguridad, confiabilidad y soporte.",
+        "Impacto": "Disminución de vulnerabilidades y fallos en producción."
+    }
+]
