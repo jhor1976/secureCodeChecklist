@@ -1,0 +1,39 @@
+name,ring,quadrant,isNew,Goal,status,Beneficio,Impacto
+Spring boot y webflux,Adopt,languages-and-frameworks,FALSE,,moved in,,
+GraphQL como alternativa a REST,Trial,languages-and-frameworks,TRUE,,new,,
+Virtual Threads (Project Loom),Trial,languages-and-frameworks,TRUE,Simplificar concurrencia y mejorar performance.,new,Mejor escalabilidad en microservicios.,
+Micronaut o Quarkus,Assess,languages-and-frameworks,TRUE,Comparar frameworks modernos de Java frente a Spring Boot.,new,"Menor consumo de memoria, arranques más rápidos.",
+Frameworks y librerias SNAPSHOT u obsoletos,Hold,languages-and-frameworks,TRUE,,new,,
+Arquitectura en capas rígida sin separación de dominios,Hold,languages-and-frameworks,FALSE,,no change,,
+IA en el equipo de arquitectura,Adopt,Platforms,,"Asistir revisiones, documentación y análisis.",,"Productividad, decisiones más rápidas. proactividad, autogestión",Metodología y alineación
+Publicar lineamientos y mejores practicas en la wiki,Adopt,Platforms,FALSE,"Centralizar lineamientos, librerías y mejores prácticas.",moved in,,
+Ambientes GCP listos para desplegar laboratorios internos,Trial,Platforms,TRUE,Realizar pruebas internas,new,"estructura base sólida, Consistencia, aprendizaje, ambiente propio",Plataforma y herramientas
+K6 (pruebas de carga),Trial,Techniques,TRUE,Validar performance antes de producción.,new,"Prevención de incidentes, experiencia de usuario estable. calidad y prevención de riesgos",Procesos y lineamientos
+Incorporar IA como apoyo de desarrollo,Assess,Platforms,TRUE,Aprovechar IA para acelerar la codifizacion,new,"Mayor productividad, feedback inmediato.",Innovación cultural
+Chaos Engineering en Pub/Sub y Redis,Assess,Platforms,TRUE,Validar resiliencia ante fallos.,new,Preparación real para escenarios críticos.,
+Bootcamps técnicos,Adopt,Techniques,TRUE,Subir el nivel técnico del equipo con prácticas guiadas.,,"Alineación, aprendizaje práctico, cultura de mejora continua.",Capacitación y cultura
+Definición de lineamientos de codigo seguro ,Adopt,Techniques,,Tener un estandar a nivel empresa de codigo seguro,,Alineacion y base tecnica solida,Procesos y lineamientos
+"Encuestas de cultura técnica (por qué LT’s no llevan temas al comité, madurez de equipo)",Adopt,Techniques,FALSE,"Detectar brechas de motivación, autogestión y colaboración.",moved in,Mejor entendimiento de la realidad cultural. claridad de responsabilidades y proactividad.,Metodología y alineación
+Programas de mentoría cruzada (arquitectos ↔ líderes técnicos ↔ devs),Adopt,Techniques,FALSE,Reducir brechas de conocimiento entre niveles.,,"Liderazgo técnico fortalecido, equipos más autónomos. responsabilidad compartida y crecimiento colectivo.",Cultura
+Revisión de código con checklist estándar,Adopt,Techniques,FALSE,Asegurar que todos los MR cumplan estándares de calidad y seguridad,,"Homogeneidad en el código, menos bugs en producción.",Mantenibilidad
+Mutation Testing para validar efectividad de unit tests,Adopt,Techniques,FALSE,Evitar pruebas unitarias sin asserts reales.,,Aumenta la calidad de las pruebas y confianza en el código.,
+Cursos específicos en University,Trial,Techniques,#REF!,Mejorar el conocimiento de los equipos.,,"Ampliar perspectiva, mejores prácticas. actualización continua",Cultura técnica
+Formación en arquitectura a lideres tecnicos,Trial,Techniques,TRUE,Ampliar el conocimiento de los LT,,Preparación para próximos retos de clientes.,Investigación y vigilancia tecnológica
+Charlas internas,Trial,Platforms,TRUE,Compartir conocimiento entre equipos.,new,Fortalecimiento de comunidad técnica.,Cultura de colaboración
+Chaos Engineering (Litmus/Gremlin),Assess,Techniques,TRUE,Validar resiliencia bajo fallas simuladas.,new,Arquitecturas más confiables,Metodología y alineación
+Performance-Driven Development,Assess,Techniques,TRUE,Integrar performance como criterio de diseño desde el inicio.,new,Aplicaciones más rápidas y eficientes.,Menos reprocesos por problemas de escalabilidad.
+Capacitaciones genéricas y teóricas sin aplicación práctica,Hold,Techniques,TRUE,Reemplazar teoría pura por práctica aplicada.,new,"Formación más efectiva, resultados visibles. foco en impacto real",Cultura
+Monitoreo manual con logs dispersos,Hold,Techniques,TRUE,Migrar a pruebas automatizadas.,new,Resultados repetibles y confiables.,Procesos y lineamientos
+Falta de documentación de aprendizajes,Hold,Techniques,FALSE,Retener el conocimiento en la empresa.,,"Historial técnico, onboarding más fácil.",Procesos y lineamientos
+Revisiones manuales extensas sin checklist,Hold,Techniques,FALSE,Eliminar una practica obsoleta,,Evita el riesgo de errores y subjetividad.,
+Prometheus y Grafana,Adopt,Tools,#REF!,Centralizar métricas de microservicios.,new,"Diagnóstico rápido, mas metricas e indicadores. confiabilidad y visibilidad",Procesos y lineamientos
+Digma (observabilidad en desarrollo),Adopt,Tools,#REF!,Detectar problemas de performance en fase dev. Prevenir de fallas,new,Bugs corregidos antes de llegar a producción.,Procesos y lineamientos
+Renovate Bot,Trial,Tools,#REF!,Automatizar actualizaciones de dependencias.,new,"Menos vulnerabilidades, librerías al día. seguridad y sostenibilidad.",Procesos y lineamientos
+Fitness functions con ArchUnit,Trial,Tools,TRUE,Automatizar validaciones de arquitectura y lineamientos tecnicos,new,Garantiza consistencia en toda la base de código.,
+GitLab Dependency Scanning,Trial,Tools,TRUE,Detectar vulnerabilidades conocidas (CVEs) en dependencias.,new,Seguridad proactiva en el pipeline.,
+AI Code Review Assistants,,,,Aumentar proactividad en revisiones técnicas.,,Detección temprana de malas prácticas y errores.,
+OpenRewrite (refactor automatizado en Java),Trial,Tools,FALSE,Apoyar migraciones de versiones y reducción de deuda técnica.,moved in,"Agilidad en upgrades (Java 21, 25).",
+OpenTelemetry + Grafana Tempo,Assess,Tools,TRUE,Observabilidad de requests end-to-end.,new,Diagnóstico de microservicios distribuido. confiabilidad técnica.,Plataforma y herramientas
+Snyk,Assess,Tools,TRUE,Detectar y sugerir remediaciones en dependencias vulnerables.,new,Corrección automática en algunos casos.,
+Semgrep,Assess,Tools,TRUE,Definir reglas de seguridad personalizadas.,new,Detecta malas prácticas específicas de la empresa.,
+Checklists manuales en Word/Excel,Hold,Tools,FALSE,"Migrar a checklists automatizados (Sonar, ArchUnit).",no change,Menos dependencia de revisiones subjetivas.,
